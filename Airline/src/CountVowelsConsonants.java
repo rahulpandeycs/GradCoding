@@ -14,6 +14,11 @@ public class CountVowelsConsonants {
       }
     }
 
+    String s = "1AF";
+    String b = "1BC";
+
+    
+
     System.out.println("Vowels: " + vowels + " , Consonants: " + consonants);
   }
 }
