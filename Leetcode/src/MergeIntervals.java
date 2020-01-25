@@ -27,6 +27,7 @@ public class MergeIntervals {
   }
 
   public static void main(String[] args){
+// https://leetcode.com/problems/meeting-rooms-ii/discuss/67855/Explanation-of-%22Super-Easy-Java-Solution-Beats-98.8%22-from-%40pinkfloyda
 //    int[][] input = {{0,30},{5,10},{15,20}};
     int[][] input = {{7,10},{2,4}};
     System.out.println(merge_intervals(input));

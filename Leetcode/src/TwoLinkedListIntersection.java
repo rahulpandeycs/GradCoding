@@ -9,7 +9,6 @@ class LinkedNode {
   }
 }
 
-
 public class TwoLinkedListIntersection {
 
   public static LinkedNode intersectionOfLinkedList(LinkedNode list1, LinkedNode list2) {
@@ -26,12 +25,13 @@ public class TwoLinkedListIntersection {
       head2 = head2.next;
     }
 
-    distanceBwTwoList = len2 -len1;
+    distanceBwTwoList = Math.abs(len2 -len1);
     maxList = len2 > len1 ? list2 : list1;
     minList = len2 > len1 ? list1 : list2;
 
     while(distanceBwTwoList > 0) {
       maxList = maxList.next;
+      distanceBwTwoList--;
     }
 
     while(maxList != null && minList!= null && maxList != minList) {
