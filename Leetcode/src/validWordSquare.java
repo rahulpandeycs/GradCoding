@@ -4,7 +4,8 @@ import java.util.Arrays;
 import java.util.List;
 
 public class validWordSquare {
-
+//https://leetcode.com/problems/valid-word-square/discuss/91150/Highly-Readable-Code-in-Java
+  //https://leetcode.com/problems/valid-word-square/
   public static boolean validWordSquareImpl(List<String> words) {
 
     for(int i = 0 ; i < words.size(); i++){
