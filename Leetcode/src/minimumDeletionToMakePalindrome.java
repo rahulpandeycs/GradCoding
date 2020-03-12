@@ -8,9 +8,9 @@ public class minimumDeletionToMakePalindrome {
   public int removePalindromeSub(String s) {
     int count = 0;
 
-    int[][] dpArray = new int[s.length()+1][s.length()+1];
+    int[][] dpArray = new int[s.length() + 1][s.length() + 1];
 
-    for(int k = s.length() - 1; k >= 0; k--) {
+    for (int k = s.length() - 1; k >= 0; k--) {
       dpArray[k][k] = 1;
       for (int l = k + 1; l < s.length(); l++) {
         if (s.charAt(k) == s.charAt(l)) {
@@ -21,8 +21,8 @@ public class minimumDeletionToMakePalindrome {
       }
     }
 
-    if(s.length() > 0)
-      if(s.length() - dpArray[0][s.length() - 1] < s.length())
+    if (s.length() > 0)
+      if (s.length() - dpArray[0][s.length() - 1] < s.length())
         count = s.length() - dpArray[0][s.length() - 1] + 1;
       else
         count = s.length() - dpArray[0][s.length() - 1];
