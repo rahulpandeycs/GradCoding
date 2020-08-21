@@ -1,3 +1,5 @@
+package src;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
@@ -124,7 +126,7 @@ public class board_path_plus_1 {
   }
 
   public static void main(String[] args) throws CloneNotSupportedException {
-    ClassLoader classLoader = board_path_plus.class.getClassLoader();
+    ClassLoader classLoader = board_path_plus_1.class.getClassLoader();
     File boardFile = new File(classLoader.getResource("boards/board1.dat").getFile());
     double[][] inputBoard1 = null;
 
