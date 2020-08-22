@@ -58,6 +58,7 @@ public class AmazonOA {
 
         System.out.println("Min Distance: " + getClosestDistanceBetweenPoints(3, List.of(0,1,2),List.of(0,1,4)));
 
+
         //==============================End ==========================================
 
 
@@ -191,13 +192,11 @@ public class AmazonOA {
         // =======================================  Done   ==================================================
 
         // ==================================== Critical Connections ========================================
-
         int numRouters1 = 7;
         int numLinks1 = 7;
         int[][] links1 = {{0, 1}, {0, 2}, {1, 3}, {2, 3}, {2, 5}, {5, 6}, {3, 4}};
         System.out.println("Critical connections: " + getCriticalNodes(links1, numLinks1, numRouters1));
         System.out.println("Critical connection (True ?): " + getCriticalNodes(links1, numLinks1, numRouters1).equals(List.of(2,3,5)));
-
         // ======================================== Done ====================================================
 
         // ========================================== Minimum Cost ==========================================
@@ -218,9 +217,72 @@ public class AmazonOA {
 
 //           System.out.println("Minimum cost to connect:" + minimumCost(5, inputPairList ));
         System.out.println("Minimum cost to connect:" + Arrays.toString(minimumCost(5, inputPairList ).toArray()));
-
         // ========================================== Done ==================================================
 
+
+
+        // ========================================= Closest pair of point ==================================
+        int[] x = new int[]{2, 12, 40, 5, 12, 3};
+        int[] y = new int[]{3, 30, 50, 1, 10, 4};
+
+        System.out.println("Min distance b/w points is: " + findMinDistance(6, x, y));
+        System.out.println("Min distance b/w points is 2nd: " + findMinDistance(3, new int[]{0,1,2}, new int[]{0,1,4}));
+        // =========================================== Done =================================================
+
+
+
+
+        // ============================================ Find Largest Association ============================
+
+        /**
+         * Example 1
+         */
+        java.util.List<PairString> inputA = Arrays.asList(
+                new PairString[]{
+                        new PairString("item1", "item2"),
+                        new PairString("item3", "item4"),
+                        new PairString("item4", "item5")
+                }
+        );
+
+        java.util.List<String> lst = largestItemAssociation(inputA);
+        for (String sa : lst) System.out.print(" " + sa);
+        System.out.println();
+
+        /**
+         * Testing equal sized arraylist. 1->2->3->7 4->5->6->7
+         */
+        java.util.List<PairString> inputA2 =  Arrays.asList(
+                new PairString[] {
+                        new PairString("item1","item2"),
+                        new PairString("item2","item3"),
+                        new PairString("item4","item5"),
+                        new PairString("item6","item7"),
+                        new PairString("item5","item6"),
+                        new PairString("item3","item7")
+                }
+        );
+
+        java.util.List<String> lst2 = largestItemAssociation(inputA2);
+        for (String sa : lst2) System.out.print(" " + sa);
+        System.out.println();
+        /**
+         * Testing duplicates: 1->2->3->7 , 5->6
+         */
+        java.util.List<PairString> inputA3 =  Arrays.asList(
+                new PairString[] {
+                        new PairString("item1","item2"),
+                        new PairString("item1","item3"),
+                        new PairString("item2","item7"),
+                        new PairString("item3","item7"),
+                        new PairString("item5","item6"),
+                        new PairString("item3","item7")
+                }
+        );
+
+        java.util.List<String> lst3 = largestItemAssociation(inputA3);
+        for (String sa : lst3) System.out.print(" " + sa);
+        // ============================================ Done ================================================
     }
 
     public static void test(String[][] codeList, String[] shoppingCart, int expect) {
@@ -630,41 +692,41 @@ public class AmazonOA {
 
     private static java.util.List<Integer> getCriticalNodes(int[][] links, int numLinks, int numRouters) {
         time =0;
-        Map<Integer, Set<Integer>> map = new HashMap<>();
+        Map<Integer, Set<Integer>> mapping = new HashMap<>();
         for(int i=0; i < numRouters; i++){
-            map.put(i,new HashSet<>());
+            mapping.put(i,new HashSet<>());
         }
         for(int[] link: links){
-            map.get(link[0]).add(link[1]);
-            map.get(link[1]).add(link[0]);
+            mapping.get(link[0]).add(link[1]);
+            mapping.get(link[1]).add(link[0]);
         }
 
-        Set<Integer> set = new HashSet<>();
-        int[] low = new int[numRouters];
-        int[] ids = new int[numRouters];
-        int[] parent = new int[numRouters];
-        Arrays.fill(parent,-1);
-        Arrays.fill(ids,-1);
+        Set<Integer> resultSet = new HashSet<>();
+        int[] arrLowLinks = new int[numRouters];
+        int[] arrIds = new int[numRouters];
+        int[] arrParent = new int[numRouters];
+        Arrays.fill(arrParent,-1);
+        Arrays.fill(arrIds,-1);
         for(int i =0; i <numRouters; i++){
-            if(ids[i] == -1)
-                dfs(map, low, ids, parent, i, set);
+            if(arrIds[i] == -1)
+                dfs(mapping, arrLowLinks, arrIds, arrParent, i, resultSet);
         }
-        return new ArrayList<>(set);
+        return new ArrayList<>(resultSet);
     }
 
-    private static void dfs(Map<Integer, Set<Integer>> map, int[] low, int[] ids, int[] parent, int cur, Set<Integer> res){
+    private static void dfs(Map<Integer, Set<Integer>> mapping, int[] arrLowLinks, int[] arrIds, int[] arrParent, int current, Set<Integer> resultSet){
         int children = 0 ;
-        ids[cur] = low[cur] = ++time;
-        for(int child : map.get(cur)) {
-            if(ids[child] == -1){
+        arrIds[current] = arrLowLinks[current] = ++time;
+        for(int child : mapping.get(current)) {
+            if(arrIds[child] == -1){
                 children++;
-                parent[child] = cur;
-                dfs(map, low, ids, parent, child, res);
-                low[cur] = Math.min(low[cur], low[child]);
-                if((parent[cur] == -1 && children > 1) || (parent[cur] != -1 && low[child] >= ids[cur]))
-                    res.add(cur);
-            } else if(child != parent[cur]) {
-                    low[cur] = Math.min(low[cur], ids[child]);
+                arrParent[child] = current;
+                dfs(mapping, arrLowLinks, arrIds, arrParent, child, resultSet);
+                arrLowLinks[current] = Math.min(arrLowLinks[current], arrLowLinks[child]);
+                if((arrParent[current] == -1 && children > 1) || (arrParent[current] != -1 && arrLowLinks[child] >= arrIds[current]))
+                    resultSet.add(current);
+            } else if(child != arrParent[current]) {
+                    arrLowLinks[current] = Math.min(arrLowLinks[current], arrIds[child]);
             }
         }
     }
@@ -720,4 +782,176 @@ public class AmazonOA {
     }
 
     // ==================================================== Done =============================================
+
+
+    // ================================= Minimum number of distinct elements after removing m items ==========
+
+
+
+    // ==================================================== Done =============================================
+
+    // ================================================ Maximum Tenure Finder ================================
+    static class Pair1{
+        int totalNodes, totalSum;
+        Pair1(int total, int sum){
+            this.totalNodes = total;
+            this.totalSum = sum;
+        }
+    }
+
+    public static int maxTenureNode;
+    public static Pair1 maxSum;
+
+    public static Pair1 findHighestTenure(HashMap<Integer, ArrayList<Integer>> root, int V){
+        if(root.get(V).size() == 0){
+            return new Pair1(1, V);
+        }
+        else{
+            int totalNodesCount = 1;
+            int totalSum = V;
+            for(int i=0;i<root.get(V).size();i++){
+                Pair1 temp = findHighestTenure(root, root.get(V).get(i));
+                totalNodesCount += temp.totalNodes;
+                totalSum += temp.totalSum;
+            }
+
+            if(totalSum * maxSum.totalNodes >= maxSum.totalSum * totalNodesCount){ // logic to avoid precision error
+                maxSum.totalNodes = totalNodesCount;
+                maxSum.totalSum = totalSum;
+                maxTenureNode = V;
+            }
+
+            return new Pair1(totalNodesCount, totalSum);
+        }
+    }
+
+    // ============================================= Done =====================================================
+
+    // ==========================================  Closest pair of points =====================================
+
+    private static int findMinDistance(int numRobots, int[] positionX, int[] positionY){
+        int[][] pointsInPlane = new int[numRobots][2];
+
+        for (int i = 0; i < positionX.length; i++) {
+            pointsInPlane[i] = new int[]{positionX[i], positionY[i]};
+        }
+
+        Arrays.sort(pointsInPlane, (o1, o2) -> o1[0] - o2[0]);
+        return minDistance(pointsInPlane, 0, pointsInPlane.length, pointsInPlane.length);
+    }
+
+    private static int minDistance(int[][] pointsInPlane, int left, int right, int n) {
+
+        if (n <= 3) {
+            int minValue = Integer.MAX_VALUE;
+            for (int i = 0; i < n; i++) {
+                for (int j = i + 1; j < n; j++) {
+                    if (dist(pointsInPlane[i], pointsInPlane[j]) < minValue) {
+                        minValue = (dist(pointsInPlane[i], pointsInPlane[j]));
+                    }
+                }
+            }
+            return minValue;
+        }
+
+        int mid = n / 2;
+        int[] midPoint = pointsInPlane[mid];
+
+        int dl = minDistance(pointsInPlane, left, mid, mid);
+        int dr = minDistance(pointsInPlane, mid, right, n - mid);
+        int d = Math.min(dl, dr);
+
+        java.util.List<int[]> strip = new ArrayList<>();
+        for(int i = 0; i < n; i++) {
+            if (Math.abs(pointsInPlane[i][0] - midPoint[0]) < d)
+                strip.add(pointsInPlane[i]);
+        }
+
+        return Math.min(d, stripClosest(strip, strip.size(), d));
+    }
+
+    private static int dist(int[] a, int[] b) {
+        return (int) (Math.pow(a[0] - b[0], 2) + Math.pow(a[1] - b[1], 2));
+    }
+
+    private static int stripClosest(java.util.List<int[]> strip, int size, int d) {
+        int minVal = d;
+        Collections.sort(strip, (o1, o2) -> o1[1] - o2[1]);
+
+        for (int i = 0; i < size; i++) {
+            int j = i + 1;
+            while(j < size && ((strip.get(j)[1] - strip.get(i)[1]) < minVal)) {
+                minVal = dist(strip.get(i), strip.get(j));
+                j += 1;
+            }
+        }
+        return minVal;
+    }
+
+    // =================================================  Done  ===============================================
+
+    // =============================================== ========================================
+    public static class PairString {
+        String first;
+        String second;
+
+        public PairString(String first, String second) {
+            this.first = first;
+            this.second = second;
+        }
+    }
+
+    public static java.util.List<String> largestItemAssociation(java.util.List<PairString> itemAssociation) {
+        Map<String, java.util.List<String>> associationMap = new HashMap<>();
+        //Map with all items and child association of every item 1->2, 2-> , 3->4, 4->5 ,5->
+        for (PairString p : itemAssociation) {
+            if (!associationMap.containsKey(p.first)) {
+                associationMap.put(p.first, new ArrayList<>());
+            }
+            associationMap.get(p.first).add(p.second);
+            if (!associationMap.containsKey(p.second)) {
+                associationMap.put(p.second, new ArrayList<>());
+            }
+        }
+        //DFS for every item: Resultant map 1->{5},{2} 2->{1,2},{4,5} 3->{3,4,5}
+        Map<Integer, java.util.List<java.util.List<String>>> sizeMap = new HashMap<>();
+        int maxassoc = Integer.MIN_VALUE;
+        for (String key : associationMap.keySet()) {
+            Queue<String> q = new LinkedList<>();
+            TreeSet<String> temp = new TreeSet<>();
+            q.offer(key);
+            while (!q.isEmpty()) {
+                String head = q.poll();
+                temp.add(head);
+                java.util.List<String> tail = associationMap.get(head);
+                for (String t : tail) {
+                    q.offer(t);
+                }
+            }
+            int size = temp.size();
+            maxassoc = Math.max(maxassoc, size);
+            if (!sizeMap.containsKey(size)) {
+                sizeMap.put(size, new ArrayList<>());
+            }
+            sizeMap.get(size).add(new ArrayList<>(temp));
+        }
+
+        // Retrieve the maximum size lists and sort them lexiographically
+        java.util.List<java.util.List<String>> maxAssociationList = sizeMap.get(maxassoc);
+
+        Collections.sort(maxAssociationList, new Comparator<java.util.List<String>>() {
+            @Override
+            public int compare(java.util.List<String> o1, java.util.List<String> o2) {
+                int result = 0;
+                for (int i = 0; i < o1.size() && result == 0; i++) {
+                    result = o1.get(i).compareTo(o2.get(i));
+                }
+                return result;
+            }
+        });
+
+        return maxAssociationList.get(0);
+    }
+
+    // ================================================= Done ================================================
 }
