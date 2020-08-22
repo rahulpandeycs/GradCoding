@@ -296,7 +296,7 @@ public class AmazonOA {
 
 
 
-    
+
 
     public static void test(String[][] codeList, String[] shoppingCart, int expect) {
         System.out.println(winPrize(codeList, shoppingCart) == expect);
