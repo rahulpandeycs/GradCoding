@@ -15,10 +15,18 @@ class TreeNode{
 }
 public class AmazonOA {
 
+    public static class Pair{
+        public char from, to;
+        public int cost;
+
+        Pair(char from, char to, int cost){
+            this.from = from;
+            this.to = to;
+            this.cost = cost;
+        }
+    }
+
     public static void main(String[] args) {
-
-
-
         // =====================getMaxUnit==============================
         /* An amazon warehouse manager needs to create a shipment to fill a truck. All of the products in
          the warehouse are in the boxes of same size. Each product is packed in some number od units per box.
@@ -182,10 +190,39 @@ public class AmazonOA {
 
         // =======================================  Done   ==================================================
 
+        // ==================================== Critical Connections ========================================
 
+        int numRouters1 = 7;
+        int numLinks1 = 7;
+        int[][] links1 = {{0, 1}, {0, 2}, {1, 3}, {2, 3}, {2, 5}, {5, 6}, {3, 4}};
+        System.out.println("Critical connections: " + getCriticalNodes(links1, numLinks1, numRouters1));
+        System.out.println("Critical connection (True ?): " + getCriticalNodes(links1, numLinks1, numRouters1).equals(List.of(2,3,5)));
 
+        // ======================================== Done ====================================================
+
+        // ========================================== Minimum Cost ==========================================
+        // num = 5
+        // connection =
+        // 	 [[A,B,1],
+        // 	 [B,C,4],
+        // 	 [B,D,6],
+        // 	 [D,E,5],
+        // 	 [C,E,1]]
+
+        java.util.List<Pair> inputPairList = new ArrayList<>();
+           inputPairList.add(new Pair('A','B',1));
+           inputPairList.add(new Pair('B','C',4));
+           inputPairList.add(new Pair('B','D',6));
+           inputPairList.add(new Pair('D','E',5));
+           inputPairList.add(new Pair('C','E',1));
+
+//           System.out.println("Minimum cost to connect:" + minimumCost(5, inputPairList ));
+        System.out.println("Minimum cost to connect:" + Arrays.toString(minimumCost(5, inputPairList ).toArray()));
+
+        // ========================================== Done ==================================================
 
     }
+
     public static void test(String[][] codeList, String[] shoppingCart, int expect) {
         System.out.println(winPrize(codeList, shoppingCart) == expect);
     }
@@ -589,7 +626,98 @@ public class AmazonOA {
     // ================================================== Done ===============================================
 
     // ================================================= Critical connections ================================
+    static int time = 0;
 
+    private static java.util.List<Integer> getCriticalNodes(int[][] links, int numLinks, int numRouters) {
+        time =0;
+        Map<Integer, Set<Integer>> map = new HashMap<>();
+        for(int i=0; i < numRouters; i++){
+            map.put(i,new HashSet<>());
+        }
+        for(int[] link: links){
+            map.get(link[0]).add(link[1]);
+            map.get(link[1]).add(link[0]);
+        }
 
+        Set<Integer> set = new HashSet<>();
+        int[] low = new int[numRouters];
+        int[] ids = new int[numRouters];
+        int[] parent = new int[numRouters];
+        Arrays.fill(parent,-1);
+        Arrays.fill(ids,-1);
+        for(int i =0; i <numRouters; i++){
+            if(ids[i] == -1)
+                dfs(map, low, ids, parent, i, set);
+        }
+        return new ArrayList<>(set);
+    }
+
+    private static void dfs(Map<Integer, Set<Integer>> map, int[] low, int[] ids, int[] parent, int cur, Set<Integer> res){
+        int children = 0 ;
+        ids[cur] = low[cur] = ++time;
+        for(int child : map.get(cur)) {
+            if(ids[child] == -1){
+                children++;
+                parent[child] = cur;
+                dfs(map, low, ids, parent, child, res);
+                low[cur] = Math.min(low[cur], low[child]);
+                if((parent[cur] == -1 && children > 1) || (parent[cur] != -1 && low[child] >= ids[cur]))
+                    res.add(cur);
+            } else if(child != parent[cur]) {
+                    low[cur] = Math.min(low[cur], ids[child]);
+            }
+        }
+    }
     // ==================================================  Done ==============================================
+
+
+    // =============================================== Minimum cost to connect cities ========================
+    static char[] parent;
+    static int n;
+
+    private static void union(char x, char y) {
+        char px = find(x);
+        char py = find(y);
+
+        if (px != py) {
+            parent[px] = py;
+            n--;
+        }
+    }
+
+    private static char find(char x) {
+        if (parent[x] == x) {
+            return parent[x];
+        }
+        parent[x] = find(parent[x]); // path compression
+        return parent[x];
+    }
+
+    public static java.util.List<String> minimumCost(int N, java.util.List<Pair> connections) {
+        java.util.List<String> output = new ArrayList<>();
+
+        parent = new char[65+N + 1];
+        n = N;
+
+        for (char i = 'A'; i <= (65 +N); i++) {
+            parent[i] = i;
+        }
+
+        Collections.sort(connections, (a, b) -> (a.cost - b.cost));
+
+        int res = 0;
+        for (Pair c : connections) {
+            char x = c.from, y = c.to;
+            if (find(x) != find(y)) {
+//                output.add(new Pair(c.from,c.to,c.cost));
+                output.add(c.from + ","+ c.to + "," +c.cost);
+                res += c.cost;
+                union(x, y);
+            }
+        }
+
+        return output;
+    }
+
+    // ==================================================== Done =============================================
 }
