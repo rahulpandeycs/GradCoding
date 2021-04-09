@@ -1,6 +1,7 @@
-package src;
+package src.AmzOA;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 class TreeNode {
     int val;
@@ -269,29 +270,29 @@ public class AmazonOA {
 
         /*
         * Top K Frequently Mentioned Keywords
-Find the keywords that are most frequently mentioned in a given list of text snippets. Return a list of the top k most frequently mentioned keywords, sorted in increasing order by their frequency, ingnoring case sensitivity.
-A "mention" of a keyword happens when the keyword appears at least once in a text snippet. If a keyword appears more than once in a snippet, it only counts as one "mention". Sort alphabetically if multiple keywords are mentioned the same number of times.
+            Find the keywords that are most frequently mentioned in a given list of text snippets. Return a list of the top k most frequently mentioned keywords, sorted in increasing order by their frequency, ingnoring case sensitivity.
+            A "mention" of a keyword happens when the keyword appears at least once in a text snippet. If a keyword appears more than once in a snippet, it only counts as one "mention". Sort alphabetically if multiple keywords are mentioned the same number of times.
 
-Input
-k: a number
-keywords: a list of words
-snippets: a list of text snippets, each containing a single contiguous paragraph
+            Input
+            k: a number
+            keywords: a list of words
+            snippets: a list of text snippets, each containing a single contiguous paragraph
 
-Output
-A list of words sorted from most frequenly mentioned to least frequently mentioned.
+            Output
+            A list of words sorted from most frequenly mentioned to least frequently mentioned.
 
-Examples
-Example 1:
-Input:
-k = 2
+            Examples
+            Example 1:
+            Input:
+            k = 2
 
-keywords = ["gatsby", "american", "novel"]
-snippets = [
-  "Classic. Yes. The great American novel. Hmph, so I heard.",
-  "Most American high school students are assigned to read this novel.",
-  "The Great Gatsby is often described as a paean to the Great American Dream",
-]
-Output: ["american", "novel"]
+            keywords = ["gatsby", "american", "novel"]
+            snippets = [
+              "Classic. Yes. The great American novel. Hmph, so I heard.",
+              "Most American high school students are assigned to read this novel.",
+              "The Great Gatsby is often described as a paean to the Great American Dream",
+            ]
+            Output: ["american", "novel"]
         * */
 
         System.out.println("\n\nOUTPUT FOR TOP K FREQUENTLY");
@@ -339,6 +340,141 @@ Output: ["american", "novel"]
         ranges.clear();
         ranges.add(Arrays.asList(0,3));
         System.out.println("Items in Containers: " + numberOfItems("|**|***|", ranges));
+
+
+
+
+
+
+
+
+
+
+
+
+
+        /*
+        Autoscale Policy, Utilization
+        * A risk modeling system uses a scaling computing system that implements an autoscale policy depending on the current load or utilization of the computing system.
+
+        The system starts with a number of computing instances given by instances. The system polls the instances every second to see the average utilization at that second, and performs scaling as described below. Once any action is taken, the system will stop polling for 10 seconds. During that time, the number of instances does not change.
+
+        Average utilization > 60%: Double the number of instances if the doubled value does not exceed 2 * 10^8. This is an action. If the number of instances exceeds this limit on doubling, perform no action.
+
+        Average utilization < 25%: Halve the number of instances if the number of instances is greater than 1 (take ceil if the number is not an integer). This is also an action. If the number of instances is 1, take no action.
+
+        25% <= Average utilization <= 60%: No action.
+
+        Given an array of the values of the average utilization at each second for this system, determine the number of instances at the end of the time frame.
+
+        For example, the system starts with instances = 2, and average utilization is given as averageUtil = [25, 23, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 76, 80].
+
+        At the first second, utilization is 25, so no action is taken.
+
+        At the second second, averageUtil[1] = 23 < 25, so instances = 2 / 2 = 1. The next 10 seconds, averageUtil[2]..averageUtil[11], no polling is done.
+
+        At averageUtil[11] = 76, 76 > 60 so the number of instances is doubled. There are no more readings to consider and 2 is the final answer.
+
+        Example 1:
+        Input: averageUtil=[5, 10, 80], instances = 1
+        Output: 2
+        Explanation:
+        Here instance = 1 and averageUtil = [5, 10, 80]. At the 1st and 2nd seconds of the time period, no action will be taken because the utilization is less than 25%, the number of instance is 1. At the 3rd second, the number of instances will double to 2.
+
+        Constraints:
+        1 <= instances <= 10^5
+        1 <= n <= 10^5
+        1 <= averageUtil[i] <= 100
+        *
+        * */
+
+
+        System.out.println("Autoscale policy for: 5 10 80 Inst 1 ::::" + autoScale(Arrays.asList(5, 10, 80),1));
+        System.out.println("Autoscale policy for: 25 23 1 2 3 4 5 6 7 8 9 10 76 80, inst 2 ::::" + autoScale(Arrays.asList(25, 23, 1, 2 ,3, 4, 5, 6 ,7 ,8 ,9, 10, 76, 80),2));
+        System.out.println("Autoscale policy for: 80 10 20 30 50 inst 100000001 ::::" + autoScale(Arrays.asList(80, 10, 20, 30, 50),100000001));
+
+
+
+
+
+
+
+        /*
+        * Given a multiset (set that allows for multiple instances of same value), partition it into two multisets A and B such that the sum of A is greater than that of B. Return A. If more than one such As exists, return the one with minimal size.
+
+        Examples
+        Example 1:
+        Input:
+        nums = [4, 5, 2, 3, 1, 2]
+
+        Output:
+        [4, 5]
+
+        Explanation:
+        We can divide the numbers into two subsets A = [4, 5] and B = [1, 2, 2, 3]. The sum of A is 9 which is greater than the sum of B which is 8. There are other ways to divide but A = [4, 5] is of minimal size of 2.
+        *
+        * */
+
+        System.out.println("Optimize weights::::::::::"+optimizingBoxWeights(Arrays.asList(1, 2, 5, 8, 3)));
+
+
+
+        /*
+        *
+        *
+        * */
+
+        System.out.println( "Storage Optimization:: " +storageOptimization(3,3, Arrays.asList(2), Arrays.asList(2)));
+
+
+
+
+        /*
+        *
+        * https://algo.monster/problems/amazon_oa_number_of_swaps_to_sort
+        * */
+
+        System.out.println("Number of Adjacent Swaps to Sort :: " + numberOfSwapsToSort(Arrays.asList(5, 4, 1, 2)));
+
+
+
+
+        /*
+        *
+        * https://algo.monster/problems/amazon_oa_find_all_combination_of_numbers_sum_to_target
+        *
+        * */
+
+        System.out.println("Number of possible Options/Sum to target ::" +
+                numberOfOptions(Arrays.asList(2, 3, 5), Arrays.asList(5), Arrays.asList(2, 3, 10), Arrays.asList(1, 2),11));
+
+
+
+
+        /*
+        * Count Split String Into Unique Primes
+        *
+        * Given a string made up of integers 0 to 9, count the number of ways to split the string into prime numbers in the range of 2 to 1000 inclusive, using up all the characters in the string.
+
+            Each prime number, pn, must not contain leading 0s, and 2 <= pn <= 1000.
+
+            Constraints
+            The input string does not contain any leading 0s.
+
+            Examples
+            Example 1:
+            Input: "31173"
+            Output: 6
+            Explanation:
+            The string "31173" can be split into prime numbers in 6 ways:
+
+            [3, 11, 7, 3]
+            [3, 11, 73]
+            [31, 17, 3]
+            [31, 173]
+            [311, 7, 3]
+            [311, 73]
+        * */
     }
 
 
@@ -346,6 +482,296 @@ Output: ["american", "novel"]
      *  SOLUTIONS
      **********************************************************************************************/
 
+    /***************************Split String Into Unique Primes****************************************/
+
+
+
+
+
+
+
+    /*********************************************************************/
+
+
+
+    /*******************Sum to target************************************/
+
+
+    public static int numberOfOptions(List<Integer> a, List<Integer> b, List<Integer> c, List<Integer> d, int limit) {
+
+        List<Integer> ab = new ArrayList<>();
+        List<Integer> cd = new ArrayList<>();
+
+        for(int val_a : a){
+            for(int val_b : b){
+                int sum = val_a + val_b;
+                if(sum <= limit) ab.add(sum);
+            }
+        }
+
+        for(int val_c : c){
+            for(int val_d : d){
+                int sum = val_c + val_d;
+                if(sum <= limit) cd.add(sum);
+            }
+        }
+
+        Collections.sort(ab);
+        Collections.sort(cd);
+
+        int count = 0;
+
+        for(int abSum : ab){
+            int rem = limit - abSum;
+            int index = bisect_right(cd.stream().mapToInt(i->i).toArray(), rem, 0, cd.size());
+            if(index < 0) index = -index +1;
+            count += index;
+        }
+
+        return count;
+    }
+
+    private static int bisect_right(int[] A, int x, int lo, int hi) {
+        while (lo < hi) {
+            int mid = (lo+hi)/2;
+            if (x < A[mid]) hi = mid;
+            else lo = mid+1;
+        }
+        return lo;
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    /********************End*******************************************/
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    /**********************************************************************************************/
+
+    public static int numberOfSwapsToSort(List<Integer> nums) {  // O(nlogn)
+
+        int[] arr = nums.stream().mapToInt(i->i).toArray();
+        return mergeSortAlgo(arr, new int[arr.length], 0, arr.length-1);
+    }
+
+    // This function merges two sorted arrays and returns inversion count in the arrays.
+    static int merge(int []arr, int []temp,
+                     int left, int mid,
+                     int right)
+    {
+        int inv_count = 0;
+
+    /* i is index for left subarray*/
+        int i = left;
+
+    /* i is index for right subarray*/
+        int j = mid;
+
+    /* i is index for resultant merged subarray*/
+        int k = left;
+
+        while ((i <= mid - 1) &&
+                (j <= right))
+        {
+            if (arr[i] <= arr[j])
+                temp[k++] = arr[i++];
+            else
+            {
+                temp[k++] = arr[j++];
+
+            /* this is tricky -- see above /
+            explanation diagram for merge()*/
+                inv_count = inv_count + (mid - i);
+            }
+        }
+
+    /* Copy the remaining elements of left subarray (if there are any) to temp*/
+        while (i <= mid - 1)
+            temp[k++] = arr[i++];
+
+    /* Copy the remaining elements of right subarray (if there are any) to temp*/
+        while (j <= right)
+            temp[k++] = arr[j++];
+
+    /*Copy back the merged elements to original array*/
+        for (i=left; i <= right; i++)
+            arr[i] = temp[i];
+
+        return inv_count;
+    }
+
+    // An auxiliary recursive function that sorts the input array and returns the number of inversions in the array.
+    static int mergeSortAlgo(int []arr, int []temp,
+                             int left, int right)
+    {
+        int mid, inversion_count = 0;
+        if (right > left)
+        {
+            // Divide the array into two parts and call _mergeSort and countInv() or each of the parts
+            mid = (right + left) / 2;
+
+            /* Inversion count will be sum of  inversions in left-part, right-part and number of inversions in merging */
+            inversion_count = mergeSortAlgo(arr, temp,
+                    left, mid);
+
+            inversion_count += mergeSortAlgo(arr, temp, mid + 1, right);
+
+            /*Merge the two parts*/
+            inversion_count += merge(arr, temp, left, mid + 1, right);
+        }
+
+        return inversion_count;
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+    /********************************************************************/
+
+
+
+
+
+
+
+
+
+
+
+
+    public static int storageOptimization(int h, int w, List<Integer> horizontalCuts, List<Integer> verticalCuts) {
+
+        int[] hz = horizontalCuts.stream().mapToInt(i->i).toArray();
+        int[] v = verticalCuts.stream().mapToInt(i->i).toArray();
+        return (longestConsecutive(hz, hz.length)+1) * (longestConsecutive(v,v.length)+1);
+    }
+
+    static int longestConsecutive(int arr[], int n)
+    {
+        HashSet<Integer> S = new HashSet<Integer>();
+        int ans = 0;
+
+        // Hash all the array elements
+        for (int i = 0; i < n; ++i)
+            S.add(arr[i]);
+
+        // check each possible sequence from the start
+        // then update optimal length
+        for (int i = 0; i < n; ++i)
+        {
+            // if current element is the starting
+            // element of a sequence
+            if (!S.contains(arr[i] - 1))
+            {
+                // Then check for next elements
+                // in the sequence
+                int j = arr[i];
+                while (S.contains(j))
+                    j++;
+
+                // update  optimal length if this
+                // length is more
+                if (ans < j - arr[i])
+                    ans = j - arr[i];
+            }
+        }
+        return ans;
+    }
+
+
+
+
+
+
+
+
+    public static List<Integer> optimizingBoxWeights(List<Integer> arr) {
+
+        Collections.sort(arr, Collections.reverseOrder());
+        int totalSum = arr.stream().mapToInt(i->i).sum();
+
+        int sum = 0;
+        List<Integer> output = new ArrayList<>();
+
+        for(int i=0; i < arr.size(); i++){
+            sum += arr.get(i);
+            output.add(arr.get(i));
+            if(sum > totalSum/2) break;
+        }
+        return output;
+    }
+
+    public int[] optimizingBoxWeight(int[] nums) {
+
+        List<Integer> arr = Arrays.stream(nums).boxed().collect(Collectors.toList());
+        Collections.sort(arr, Collections.reverseOrder());
+        int totalSum = arr.stream().mapToInt(i->i).sum();
+
+        int sum = 0;
+        List<Integer> output = new ArrayList<>();
+
+        for(int i=0; i < arr.size(); i++){
+            sum += arr.get(i);
+            output.add(arr.get(i));
+            if(sum > totalSum/2) break;
+        }
+        return output.stream().mapToInt(i->i).toArray();
+    }
+
+
+    public static int autoScale(List<Integer> averageUtils, int numInstances) {
+
+        int instance = numInstances;
+        for(int i=0; i < averageUtils.size(); i++){
+            int currentLoad = averageUtils.get(i);
+            if(currentLoad >= 25 && currentLoad <= 60) continue;
+            else if(currentLoad < 25){
+                if(instance == 1) continue;
+                instance = (int)Math.ceil((double)instance/2.0);
+                i = Math.min(i+10, averageUtils.size()-1);
+            }else if(currentLoad > 60){
+                if(instance*2 >  2 * Math.pow(10,8)) continue;
+                instance *= 2;
+                i = Math.min(i+10, averageUtils.size()-1);
+            }
+        }
+        return instance;
+    }
 
 
 
