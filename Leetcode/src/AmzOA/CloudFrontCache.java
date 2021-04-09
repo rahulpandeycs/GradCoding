@@ -7,7 +7,7 @@ public class CloudFrontCache {
 
         UnionFind uf = new UnionFind(n);
 
-        for(int[] edge:connections){
+        for (int[] edge : connections) {
             int node1 = edge[0];
             int node2 = edge[1];
             uf.union(node1, node2);
@@ -15,11 +15,11 @@ public class CloudFrontCache {
         int res = 0;
         System.out.println("Parent: " + Arrays.toString(uf.parent));
         System.out.println("rank: " + Arrays.toString(uf.rank));
-        for(int i=0; i < uf.parent.length; i++){
-            if(uf.parent[i] == i){
+        for (int i = 0; i < uf.parent.length; i++) {
+            if (uf.parent[i] == i) {
 //                System.out.println("Parent: " + Arrays.toString(uf.parent));
                 res += Math.ceil(Math.sqrt(uf.rank[i]));
-            }else{
+            } else {
                 res += 1;
             }
         }
@@ -28,7 +28,8 @@ public class CloudFrontCache {
 
     class UnionFind {
         private int count = 0;
-        private int[] parent, rank;
+        private final int[] parent;
+        private final int[] rank;
 
         public UnionFind(int n) {
             count = n;
@@ -71,8 +72,8 @@ public class CloudFrontCache {
 
     public static void main(String[] args) {
         CloudFrontCache cloudFrontCache = new CloudFrontCache();
-        System.out.println("Maintenance cost: " + cloudFrontCache.costEvaluation(4, new int[][]{{0,2}, {1,2}}));
-        System.out.println("Maintenance cost: " + cloudFrontCache.costEvaluation(10, new int[][]{{2,6}, {3,5}, {0,1}, {2,9}, {5,6}}));
+        System.out.println("Maintenance cost: " + cloudFrontCache.costEvaluation(4, new int[][]{{0, 2}, {1, 2}}));
+        System.out.println("Maintenance cost: " + cloudFrontCache.costEvaluation(10, new int[][]{{2, 6}, {3, 5}, {0, 1}, {2, 9}, {5, 6}}));
     }
 
 }
