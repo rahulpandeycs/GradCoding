@@ -2,6 +2,8 @@ package src.AmzOA;
 
 import java.util.*;
 
+
+//All test cases passed
 public class FiveStartSeller2 {
 
     static class Product{

@@ -775,7 +775,7 @@ public class AmazonOA {
 
 
 
-    public static List<Integer> numberOfItems(String s, List<List<Integer>> ranges) {
+    public static List<Integer>     numberOfItems(String s, List<List<Integer>> ranges) {
 
         List<Integer> output = new ArrayList<>();
         for(List<Integer> range : ranges){
