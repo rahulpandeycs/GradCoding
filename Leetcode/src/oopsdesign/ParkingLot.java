@@ -96,6 +96,8 @@ enum VehicleType {
 
 interface Vehicle {
     public VehicleType getType();
+
+    void assignTicket(ParkingTicket ticket);
 }
 
 class Bike implements Vehicle {
@@ -114,6 +116,11 @@ class Bike implements Vehicle {
     @Override
     public VehicleType getType() {
         return VehicleType.BIKE;
+    }
+
+    @Override
+    public void assignTicket(ParkingTicket ticket) {
+
     }
 
 }
@@ -135,6 +142,11 @@ class HatchBackCar implements Vehicle {
     public VehicleType getType() {
         return VehicleType.COMPACT;
     }
+
+    @Override
+    public void assignTicket(ParkingTicket ticket) {
+
+    }
 }
 
 class Sedan implements Vehicle {
@@ -153,6 +165,11 @@ class Sedan implements Vehicle {
     @Override
     public VehicleType getType() {
         return VehicleType.SEDAN;
+    }
+
+    @Override
+    public void assignTicket(ParkingTicket ticket) {
+
     }
 
 }
