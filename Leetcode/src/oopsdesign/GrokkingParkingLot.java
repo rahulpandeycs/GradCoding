@@ -131,7 +131,6 @@ enum VehicleType1 {
 
 
  class ParkingTicket{
-
      public String getTicketNumber() {
          return "";
      }

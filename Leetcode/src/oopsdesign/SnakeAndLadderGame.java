@@ -35,41 +35,34 @@ public class SnakeAndLadderGame {
     }
 }
 
- class Snake {
+ abstract class BoardItem{
+     int start;
+     int end;
+
+     BoardItem(int start, int end){
+         this.start = start;
+         this.end = end;
+     }
+
+     int getStart(){
+         return this.start;
+     }
+     int getEnd(){
+         return this.end;
+     }
+ }
+
+ class Snake extends BoardItem{
     // Each snake will have its head at some number and its tail at a smaller number.
-    private int start;
-    private int end;
-
     public Snake(int start, int end) {
-        this.start = start;
-        this.end = end;
-    }
-
-    public int getStart() {
-        return start;
-    }
-
-    public int getEnd() {
-        return end;
+        super(start,end);
     }
 }
 
- class Ladder {
+ class Ladder extends BoardItem{
     // Each ladder will have its start position at some number and end position at a larger number.
-    private int start;
-    private int end;
-
     public Ladder(int start, int end) {
-        this.start = start;
-        this.end = end;
-    }
-
-    public int getStart() {
-        return start;
-    }
-
-    public int getEnd() {
-        return end;
+        super(start,end);
     }
 }
 
@@ -136,7 +129,6 @@ class SnakeAndLadderBoard {
         this.playerPieces = playerPieces;
     }
 }
-
 
 
 class DiceService {

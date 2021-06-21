@@ -5,7 +5,6 @@ import java.util.List;
 public class Chess {
 }
 
-
  enum GameStatus {
     ACTIVE, BLACK_WIN, WHITE_WIN, FORFEIT, STALEMATE, RESIGNATION
 }
@@ -34,7 +33,6 @@ abstract class Piece{
     private boolean killed=false;
     private boolean white = false;
 
-
     public Piece(boolean white) {
         this.white = white;
     }
@@ -55,16 +53,16 @@ abstract class Piece{
         this.white = white;
     }
 
-    public abstract boolean canMove(Board board, Box start, Box end);
+    public abstract boolean canMove(Board board, Cell start, Cell end);
 }
 
-class Box{
+class Cell {
 
     private Piece piece;
     private int x;
     private int y;
 
-    public Box(Piece piece, int x, int y) {
+    public Cell(Piece piece, int x, int y) {
         this.piece = piece;
         this.x = x;
         this.y = y;
@@ -112,7 +110,7 @@ class King extends Piece{
     }
 
     @Override
-    public boolean canMove(Board board, Box start, Box end) {
+    public boolean canMove(Board board, Cell start, Cell end) {
         if(end.getPiece().isWhite() == this.isWhite())
             return false;
 
@@ -123,7 +121,7 @@ class King extends Piece{
         return this.isValidCastling(board,start,end);
     }
 
-    private boolean isValidCastling(Board board, Box start, Box end) {
+    private boolean isValidCastling(Board board, Cell start, Cell end) {
         if(this.isCastlingDone()) return false;
 
         // Check for the white king castling
@@ -131,7 +129,7 @@ class King extends Piece{
         return true;
     }
 
-    public boolean isCastlingMove(Box start, Box end){
+    public boolean isCastlingMove(Cell start, Cell end){
         return true;
     }
 }
@@ -143,7 +141,7 @@ class Knight extends Piece{
     }
 
     @Override
-    public boolean canMove(Board board, Box start, Box end) {
+    public boolean canMove(Board board, Cell start, Cell end) {
 
         if(end.getPiece().isWhite() && this.isWhite()) return false;  //Same color
 
@@ -154,13 +152,13 @@ class Knight extends Piece{
 }
 
 class Board{
-    Box[][] board;
+    Cell[][] board;
 
     Board(){
         this.resetBoard();
     }
 
-    public Box getBox(int x, int y){
+    public Cell getBox(int x, int y){
         if(x < 0 || y < 0 || x > 7 || y > 7 ){
             //error
         }
@@ -189,13 +187,13 @@ class Player2 extends Account{
 
 class Move{
     private Player2 player;
-    private Box start;
-    private Box end;
+    private Cell start;
+    private Cell end;
     private Piece pieceMoved;
     private Piece pieceKilled;
     private boolean castlingMove = false;
 
-    public Move(Player2 player, Box start, Box end) {
+    public Move(Player2 player, Cell start, Cell end) {
         this.player = player;
         this.start = start;
         this.end = end;
@@ -209,11 +207,11 @@ class Move{
         this.castlingMove = castlingMove;
     }
 
-    public Box getStart() {
+    public Cell getStart() {
         return start;
     }
 
-    public Box getEnd() {
+    public Cell getEnd() {
         return end;
     }
 
@@ -258,9 +256,9 @@ class Game{
     }
 
     public boolean playerMove(Player2 player, int startX, int startY, int endX, int endY){
-        Box startBox = board.getBox(startX,startY);
-        Box endBox = board.getBox(endX,endY);
-        Move move = new Move(player, startBox,endBox);
+        Cell startCell = board.getBox(startX,startY);
+        Cell endCell = board.getBox(endX,endY);
+        Move move = new Move(player, startCell, endCell);
         return this.makeMove(move, player);
     }
 

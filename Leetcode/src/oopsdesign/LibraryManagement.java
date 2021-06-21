@@ -7,7 +7,6 @@ import java.util.*;
 public class LibraryManagement {
 }
 
-
 enum BookFormat {
     HARDCOVER,
     PAPERBACK,
@@ -25,7 +24,7 @@ enum BookStatus {
     LOST
 }
 
-enum ReservationStatus{
+enum ReservationStatus {
     WAITING,
     PENDING,
     CANCELED,
@@ -33,7 +32,7 @@ enum ReservationStatus{
     COMPLETED
 }
 
-enum AccountStatus{
+enum AccountStatus {
     ACTIVE,
     CLOSED,
     CANCELED,
@@ -103,10 +102,10 @@ class Constants {
 
  class Member extends Account {
     private Date dateOfMembership;
-    private int totalBooksCheckedout;
+    private int totalCheckedOutBooks;
 
     public int getTotalBooksCheckedOut() {
-        return totalBooksCheckedout;
+        return totalCheckedOutBooks;
     }
 
     public boolean reserveBookItem(BookItem bookItem) {
@@ -114,12 +113,12 @@ class Constants {
     }
 
     private void incrementTotalBooksCheckedout() {
-        this.totalBooksCheckedout++;
+        this.totalCheckedOutBooks++;
     }
 
 
     private void decrementTotalBooksCheckedout() {
-        this.totalBooksCheckedout--;
+        this.totalCheckedOutBooks--;
     }
 
     public boolean checkoutBookItem(BookItem bookItem) {
@@ -189,6 +188,51 @@ class Constants {
     }
 }
 
+abstract class Book {
+    private String ISBN;
+    private String title;
+    private String subject;
+    private String publisher;
+    private String language;
+    private int numberOfPages;
+    private List<Author> authors;
+}
+
+class BookItem extends Book {
+    private String barcode;
+    private boolean isReferenceOnly;
+    private double price;
+    private BookFormat format;
+    private BookStatus status;
+    private Date dateOfPurchase;
+    private Date publicationDate;
+    private Rack placedAt;
+
+
+    public void updateBookItemStatus(BookStatus loaned) {
+    }
+
+    public void updateDueDate(LocalDate date) {
+    }
+
+    public String getBarCode() {
+        return "";
+    }
+
+    public boolean checkout(String memberId) {
+        if(this.isReferenceOnly) {
+            //ShowError("This book is Reference only and can't be issued");
+            return false;
+        }
+        if(!BookLending.lendBook(this.getBarCode(), memberId)){
+            return false;
+        }
+        this.updateBookItemStatus(BookStatus.LOANED);
+        return true;
+    }
+
+}
+
 
  class BookReservation {
     private Date creationDate;
@@ -236,7 +280,7 @@ class Constants {
         return null;
     }
 
-     public Date getDueDate() {
+    public Date getDueDate() {
          return dueDate;
      }
 
@@ -250,58 +294,10 @@ class Constants {
     public static void collectFine(String memberId, long days) {}
 }
 
-
- abstract class Book {
-    private String ISBN;
-    private String title;
-    private String subject;
-    private String publisher;
-    private String language;
-    private int numberOfPages;
-    private List<Author> authors;
-}
-
- class BookItem extends Book {
-    private String barcode;
-    private boolean isReferenceOnly;
-    private double price;
-    private BookFormat format;
-    private BookStatus status;
-    private Date dateOfPurchase;
-    private Date publicationDate;
-    private Rack placedAt;
-
-
-    public void updateBookItemStatus(BookStatus loaned) {
-    }
-
-     public void updateDueDate(LocalDate date) {
-     }
-
-    public String getBarCode() {
-        return "";
-    }
-
-    public boolean checkout(String memberId) {
-        if(this.isReferenceOnly) {
-            //ShowError("This book is Reference only and can't be issued");
-            return false;
-        }
-        if(!BookLending.lendBook(this.getBarCode(), memberId)){
-            return false;
-        }
-        this.updateBookItemStatus(BookStatus.LOANED);
-        return true;
-    }
-
-}
-
  class Rack {
     private int number;
     private String locationIdentifier;
 }
-
-
 
  interface Search {
     public List<Book> searchByTitle(String title);

@@ -22,6 +22,87 @@ enum Door {
     OPEN, CLOSED
 }
 
+class Request {
+    public long time;
+    public Integer floor;
+    public Direction direction;
+
+    public Request(long time, Integer floor, Direction direction) {
+        this.time = time;
+        this.floor = floor;
+        this.direction = direction;
+    }
+}
+
+ class Process implements Runnable {
+    private Elevator elevator;
+
+    Process(Elevator elevator){
+        this.elevator = elevator;
+    }
+    @Override
+    public void run() {
+        elevator.process();
+    }
+}
+
+ class Listen implements Runnable {
+     private Elevator elevator;
+
+     Listen(Elevator elevator){
+         this.elevator = elevator;
+     }
+    @Override
+    public void run() {
+        try {
+            ServerSocket serverSocket = new ServerSocket(90000);
+            while (true) {
+                Socket socket = serverSocket.accept();
+                Thread thread = new Thread(new Worker(socket, this.elevator));
+                thread.start();
+            }
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
+    }
+}
+
+ class Worker implements Runnable {
+    private Socket s;
+    private Elevator elevator;
+
+    public Worker(Socket s, Elevator elevator) {
+        this.s = s;
+        this.elevator = elevator;
+    }
+
+    @Override
+    public void run() {
+        try {
+            BufferedReader reader = new BufferedReader(
+                    new InputStreamReader(s.getInputStream()));
+            String line;
+            while (true) {
+                if ((line = reader.readLine()) != null) {
+                    String[] tokens = line.split(" ");
+                    if(tokens.length == 3 && tokens[0].equals("call")){
+                        elevator.call(Integer.parseInt(tokens[1]), tokens[2].equals("up")?Direction.UP:Direction.DOWN);
+                    }else if(tokens.length == 2 && tokens[0].equals("go")){
+                        elevator.go(Integer.parseInt(tokens[1]));
+                    }else{
+                        s.getOutputStream().write("Wrong input".getBytes());
+                    }
+                }
+            }
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+    }
+}
+
 public class Elevator {
     private float location = 0;
     private Direction direction = Direction.UP;
@@ -29,18 +110,6 @@ public class Elevator {
     private Door door = Door.CLOSED;
     private Thread processingThread;
     private Thread listeningThread;
-
-    public class Request {
-        public long time;
-        public Integer floor;
-        public Direction direction;
-
-        public Request(long time, Integer floor, Direction direction) {
-            this.time = time;
-            this.floor = floor;
-            this.direction = direction;
-        }
-    }
 
     public Comparator<Request> upComparator = new Comparator<Request>() {
         public int compare(Request u1, Request u2) {
@@ -63,9 +132,11 @@ public class Elevator {
             }
         } else {
             if (floor <= location) {
-                currentQueue.add(new Request(System.currentTimeMillis(), floor, direction));
+                currentQueue.add(new Request(System.currentTimeMillis(), floor,
+                        direction));
             } else {
-                downQueue.add(new Request(System.currentTimeMillis(), floor, direction));
+                downQueue.add(new Request(System.currentTimeMillis(), floor,
+                        direction));
             }
         }
     }
@@ -139,68 +210,11 @@ public class Elevator {
         return lowest;
     }
 
-    public class Process implements Runnable {
-        @Override
-        public void run() {
-            process();
-        }
-    }
-
-    public class Listen implements Runnable {
-        @Override
-        public void run() {
-            try {
-                ServerSocket serverSocket = new ServerSocket(90000);
-                while (true) {
-                    Socket socket = serverSocket.accept();
-                    Thread thread = new Thread(new Worker(socket));
-                    thread.start();
-                }
-            } catch (IOException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
-            }
-
-        }
-    }
-
-    public class Worker implements Runnable {
-        private Socket s;
-
-        public Worker(Socket s) {
-            this.s = s;
-        }
-
-        @Override
-        public void run() {
-            try {
-                BufferedReader reader = new BufferedReader(
-                        new InputStreamReader(s.getInputStream()));
-                String line;
-                while (true) {
-                    if ((line = reader.readLine()) != null) {
-                        String[] tokens = line.split(" ");
-                        if(tokens.length == 3 && tokens[0].equals("call")){
-                            call(Integer.parseInt(tokens[1]), tokens[2].equals("up")?Direction.UP:Direction.DOWN);
-                        }else if(tokens.length == 2 && tokens[0].equals("go")){
-                            go(Integer.parseInt(tokens[1]));
-                        }else{
-                            s.getOutputStream().write("Wrong input".getBytes());
-                        }
-                    }
-                }
-            } catch (IOException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
-            }
-        }
-    }
-
     public static void main(String[] args) {
         Elevator elevator = new Elevator();
-        elevator.listeningThread = new Thread(elevator.new Listen());
+        elevator.listeningThread = new Thread(new Listen(elevator));
         elevator.listeningThread.start();
-        elevator.processingThread = new Thread(elevator.new Process());
+        elevator.processingThread = new Thread(new Process(elevator));
         elevator.processingThread.start();
         try {
             Thread.currentThread().join();
