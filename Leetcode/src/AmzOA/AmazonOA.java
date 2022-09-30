@@ -35,18 +35,18 @@ public class AmazonOA {
          of units of any mix of products that can be shipped.
          */
         int num = 3;
-        ArrayList<Integer> boxes = new ArrayList<>(List.of(1, 2, 3));
+        List<Integer> boxes = Arrays.asList(1, 2, 3);
         int unitSize = 3;
-        ArrayList<Integer> unitsPerBox = new ArrayList<>(List.of(3, 2, 1));
+        List<Integer> unitsPerBox = new ArrayList<>(Arrays.asList(3, 2, 1));
         int truckSize = 3;
 
         System.out.println(getMaxUnit(num, boxes, unitSize, unitsPerBox, truckSize));
 
 
         num = 5;
-        boxes = new ArrayList<>(List.of(1, 2, 3, 2, 1));
+        boxes = (ArrayList<Integer>) Arrays.asList(1, 2, 3, 2, 1);
         unitSize = 3;
-        unitsPerBox = new ArrayList<>(List.of(3, 2, 1, 3, 2));
+        unitsPerBox = Arrays.asList(3, 2, 1, 3, 2);
         truckSize = 4;
 
         System.out.println(getMaxUnit(num, boxes, unitSize, unitsPerBox, truckSize));
@@ -55,7 +55,7 @@ public class AmazonOA {
 
         // ======================= CALLING MIN_SQUARED Distance Robots ===============
 
-        System.out.println("Min Distance: " + getClosestDistanceBetweenPoints(3, List.of(0, 1, 2), List.of(0, 1, 4)));
+        System.out.println("Min Distance: " + getClosestDistanceBetweenPoints(3, Arrays.asList(0, 1, 2), Arrays.asList(0, 1, 4)));
 
 
         //==============================End ==========================================
@@ -94,8 +94,8 @@ public class AmazonOA {
         *
         * */
 
-        java.util.List<String> result = findNearestSharedCity(3, List.of("c1", "c2", "c3"), List.of(3, 2, 1), List.of(3, 2, 3),
-                3, List.of("c1", "c2", "c3"));
+        java.util.List<String> result = findNearestSharedCity(3, Arrays.asList("c1", "c2", "c3"), Arrays.asList(3, 2, 1), Arrays.asList(3, 2, 3),
+                3, Arrays.asList("c1", "c2", "c3"));
         System.out.println("Nearest Shared city: " + Arrays.toString(result.toArray()));
 
         // ============================================ End ===============================================
@@ -137,7 +137,7 @@ public class AmazonOA {
 
 
         //=========================================== Get Max profit Product ==============================
-        System.out.println("The max Profit obtained is: " + maxProfitForGivenProduct(2, List.of(3l, 5l), 6));
+        System.out.println("The max Profit obtained is: " + maxProfitForGivenProduct(2, Arrays.asList(3l, 5l), 6));
 
         // ===================================== End ======================================================
 
@@ -191,7 +191,7 @@ public class AmazonOA {
         int numLinks1 = 7;
         int[][] links1 = {{0, 1}, {0, 2}, {1, 3}, {2, 3}, {2, 5}, {5, 6}, {3, 4}};
         System.out.println("Critical connections: " + getCriticalNodes(links1, numLinks1, numRouters1));
-        System.out.println("Critical connection (True ?): " + getCriticalNodes(links1, numLinks1, numRouters1).equals(List.of(2, 3, 5)));
+        System.out.println("Critical connection (True ?): " + getCriticalNodes(links1, numLinks1, numRouters1).equals(Arrays.asList(2, 3, 5)));
         // ======================================== Done ====================================================
 
         // ========================================== Minimum Cost ==========================================
@@ -825,7 +825,7 @@ public class AmazonOA {
         });
 
         for(Map.Entry<String,Integer> entry : mp.entrySet()){
-            pq.add(Map.entry(entry.getValue(), entry.getKey()));
+            pq.add(new AbstractMap.SimpleEntry<Integer,String>(entry.getValue(), entry.getKey()));
         }
 
         while(!pq.isEmpty() && k > 0){
@@ -861,7 +861,7 @@ public class AmazonOA {
 
 //    ================================ MAX_UNIT ========================
 
-    static long getMaxUnit(int num, ArrayList<Integer> boxes, int unitSize, ArrayList<Integer> unitsPerBox, long truckSize) {
+    static long getMaxUnit(int num, List<Integer> boxes, int unitSize, List<Integer> unitsPerBox, long truckSize) {
 
         PriorityQueue<Integer> pq = new PriorityQueue<>();
         for (int i = 0; i < num; i++) {
